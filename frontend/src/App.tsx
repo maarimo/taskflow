@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import type { Tarefa } from "./types/tarefa";
+import "./App.css";
 import {
   listarTarefas,
   criarTarefa,
@@ -24,6 +25,16 @@ function App() {
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
+
+  const totalTarefas = tarefas.length;
+
+  const tarefasPendentes = tarefas.filter(
+    (tarefa) => tarefa.status === "PENDENTE",
+  ).length;
+
+  const tarefasConcluidas = tarefas.filter(
+    (tarefa) => tarefa.status === "CONCLUIDA",
+  ).length;
 
   async function carregarTarefas() {
     try {
@@ -141,6 +152,23 @@ function App() {
       <h1>TaskFlow</h1>
       <p>Gerenciador de tarefas</p>
 
+      <div className="resumo-tarefas">
+        <article>
+          <span>Total de tarefas</span>
+          <strong>{totalTarefas}</strong>
+        </article>
+
+        <article>
+          <span>Pendentes</span>
+          <strong>{tarefasPendentes}</strong>
+        </article>
+
+        <article>
+          <span>Concluídas</span>
+          <strong>{tarefasConcluidas}</strong>
+        </article>
+      </div>
+
       <section>
         <h2>{editandoId !== null ? "Editar tarefa" : "Nova tarefa"}</h2>
 
@@ -228,8 +256,17 @@ function App() {
               <li key={tarefa.id}>
                 <h3>{tarefa.titulo}</h3>
                 <p>{tarefa.descricao}</p>
-                <p>Status: {tarefa.status}</p>
-                <p>Prioridade: {tarefa.prioridade}</p>
+                <p>
+                  Status: <span className={`status status-${tarefa.status.toLowerCase()}`}>
+                    {tarefa.status.replace("_", " ")}
+                  </span>
+                </p>
+
+                <p>
+                  Prioridade: <span className={`prioridade prioridade-${tarefa.prioridade.toLowerCase()}`}>
+                    {tarefa.prioridade}
+                  </span>
+                </p>
 
                 <button
                   type="button"
